@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Results</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FAF8F6;
+            color: #333;
+        }
+        .container {
+            text-align: left;
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #4A4A4A;
+        }
+        .markdown-content {
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        a {
+            display: block;
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Found Patterns</h1>
+        <div class="markdown-content">
+            {{ results | safe }}
+        </div>
+        <a href="/">Go back</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Prompt Settings</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FAF8F6;
+            color: #333;
+        }
+        .sidebar {
+            width: 60px;
+            background-color: #FFF;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .sidebar a {
+            margin: 20px 0;
+            text-decoration: none;
+            color: #333;
+            font-size: 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar a span.text {
+            display: none;
+            position: absolute;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #333;
+            color: #FFF;
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .sidebar a:hover span.text {
+            display: inline-block;
+        }
+        .container {
+            flex: 1;
+            text-align: left;
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: auto;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        select, textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #CCC;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 150px;
+        }
+        input[type="submit"], button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #0056b3;
+        }
+        button.delete {
+            background-color: #dc3545;
+        }
+        button.delete:hover {
+            background-color: #c82333;
+        }
+        .form-section {
+            margin-bottom: 40px;
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .message {
+            padding: 10px 20px;
+            border-radius: 4px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: none;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .back-button {
+            margin-top: 1px;
+            display: inline-block;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function updatePromptContent() {
+            const select = document.getElementById('prompt_select');
+            const contentTextarea = document.getElementById('selected_prompt_content');
+            contentTextarea.value = select.options[select.selectedIndex].dataset.content;
+        }
+        function deleteSelectedPrompt() {
+            const select = document.getElementById('prompt_select');
+            const deleteNameInput = document.getElementById('delete_prompt_name');
+            deleteNameInput.value = select.value;
+            document.getElementById('delete_form').submit();
+        }
+        function showMessage(message, status) {
+            const messageBox = document.getElementById('message_box');
+            messageBox.textContent = message;
+            messageBox.className = 'message ' + status;
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+        document.addEventListener('DOMContentLoaded', (event) => {
+            updatePromptContent();
+            const message = "{{ message }}";
+            const status = "{{ status }}";
+            if (message) {
+                showMessage(message, status);
+            }
+        });
+    </script>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+    <div class="container">
+        <h1>Prompt Settings</h1>
+        <div id="message_box" class="message"></div>
+        <div class="form-section">
+            <form action="/save_prompt" method="post">
+                <label for="prompt_select">Select Prompt:</label>
+                <select id="prompt_select" name="name" onchange="updatePromptContent()">
+                    {% for name, content in prompts.items() %}
+                        <option value="{{ name }}" data-content="{{ content }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="selected_prompt_content">Prompt Content:</label>
+                <textarea id="selected_prompt_content" name="content" required></textarea>
+
+                <div class="actions">
+                    <input type="submit" value="Save Prompt">
+                    <button type="button" class="delete" onclick="deleteSelectedPrompt()">Delete Prompt</button>
+                </div>
+            </form>
+            <form id="delete_form" action="/delete_prompt" method="post" style="display:inline;">
+                <input type="hidden" name="name" id="delete_prompt_name">
+            </form>
+        </div>
+        <div class="form-section">
+            <form action="/save_prompt" method="post">
+                <label for="new_prompt_name">New Prompt Name:</label>
+                <input type="text" id="new_prompt_name" name="name" required>
+
+                <label for="new_prompt_content">New Prompt Content:</label>
+                <textarea id="new_prompt_content" name="content" required></textarea>
+
+                <input type="submit" value="Add New Prompt">
+            </form>
+        </div>
+        <a href="/" class="back-button">Go back</a>
+    </div>
+    <script>
+        // Initialize the content textarea with the selected prompt content
+        document.addEventListener('DOMContentLoaded', (event) => {
+            updatePromptContent();
+        });
+    </script>
+</body>
+</html>

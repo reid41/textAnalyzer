@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Analyzer</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FAF8F6;
+            color: #333;
+        }
+        .sidebar {
+            width: 60px;
+            background-color: #FFF;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .sidebar a {
+            margin: 20px 0;
+            text-decoration: none;
+            color: #333;
+            font-size: 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar a span.text {
+            display: none;
+            position: absolute;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #333;
+            color: #FFF;
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .sidebar a:hover span.text {
+            display: inline-block;
+        }
+        .container {
+            flex: 1;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: auto;
+            position: relative;
+        }
+        textarea, select {
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            border: 1px solid #CCC;
+            border-radius: 4px;
+        }
+        textarea {
+            height: 300px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #FFF;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+    </style>
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    {% include 'sidebar.html' %}
+    <div class="container">
+        <h1 class="title">Text Analyzer</h1>
+        <h3>Enter text to find patterns using LLM</h3>
+        <form action="/find_patterns" method="post" onsubmit="showLoading()">
+            <select name="prompt_name">
+                {% for name in prompts %}
+                    <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+            <textarea name="text"></textarea><br><br>
+            <input type="submit" value="Analyze">
+        </form>
+        <div id="loading" class="loading">
+            Analyzing... Please wait.
+        </div>
+    </div>
+</body>
+</html>

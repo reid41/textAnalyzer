@@ -1,6 +1,6 @@
 # textAnalyzer
 
-TextAnalyzer is a project that streamlines routine text analysis tasks by using Large Language Models (LLMs) with specific prompts to quickly filter and extract desired information from various documents, saving time and effort in the content processing.
+TextAnalyzer is a project that streamlines routine text analysis tasks by using Large Language Models (LLMs) with specific prompts to quickly filter and extract desired information from various documents, saving time and effort in the content processing. Actually, it can define different prompts to filter, format, ... or analyze text with LLM for the repetitive work.
 
 ### Disclaimer
 

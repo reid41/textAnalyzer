@@ -8,6 +8,8 @@ TextAnalyzer is a project that streamlines routine text analysis tasks by using 
 * `Do not use models for analyzing your critical or production data!!`
 * `Do not use models for analyzing customer data to ensure data privacy and security!!`
 * `Do not use models for analyzing you private/sensitivity code respository!!`
+  
+![textAnalyzer](https://github.com/reid41/textAnalyzer/assets/25558653/5015b08e-08a3-4332-a2cc-6282bbf745fa)
 
 ### Deployment
 

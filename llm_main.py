@@ -5,10 +5,25 @@ from openai import OpenAI
 import configparser
 import markdown2
 import os
+import logging
+from logging.handlers import RotatingFileHandler
+from datetime import datetime
 
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
+
+# Set up logging with rotating file handler
+log_file = "access_log.txt"
+log_handler = RotatingFileHandler(log_file, maxBytes=1 * 1024 * 1024, backupCount=8)  # 1MB per file, keep 8 backups
+logging.basicConfig(handlers=[log_handler], level=logging.INFO, format="%(asctime)s - %(message)s")
+
+
+def log_request(request: Request):
+    client_host = request.client.host
+    access_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    path = request.url.path
+    logging.info(f"Access Time: {access_time}, Client IP: {client_host}, Accessed Path: {path}")
 
 
 def load_prompts():
@@ -21,6 +36,13 @@ def load_llm_config():
     llm_config = configparser.ConfigParser()
     llm_config.read('config/llm_config.ini')
     return llm_config
+
+
+@app.middleware("http")
+async def log_requests_middleware(request: Request, call_next):
+    log_request(request)
+    response = await call_next(request)
+    return response
 
 
 @app.get("/", response_class=HTMLResponse)
